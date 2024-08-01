@@ -1,3 +1,9 @@
+openjdk-21 (21.0.4+7-2deepin1) unstable; urgency=medium
+
+  * Remove t64.
+
+ -- xiangzelong <xiangzelong@deepin.org>  Thu, 01 Aug 2024 19:37:59 +0800
+
 openjdk-21 (21.0.4+7-2) unstable; urgency=medium
 
   [ Vladimir Petko ]
