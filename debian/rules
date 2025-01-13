@@ -277,9 +277,9 @@ else ifneq (,$(filter $(distrel),mantic noble))
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-13
   bd_gcc = g++-13 <!cross>,
 else
-  export CC = $(DEB_HOST_GNU_TYPE)-gcc-13
-  export CXX = $(DEB_HOST_GNU_TYPE)-g++-13
-  bd_gcc = g++-13 <!cross>,
+  export CC = $(DEB_HOST_GNU_TYPE)-gcc-14
+  export CXX = $(DEB_HOST_GNU_TYPE)-g++-14
+  bd_gcc = g++-14 <!cross>,
 endif
 
 # GCC 11 only
@@ -383,8 +383,10 @@ else ifeq ($(with_nss),no)
   CONFIGURE_ARGS += --disable-nss
 endif
 
-ifeq ($(with_systemtap),yes)
-  CONFIGURE_ARGS += --enable-systemtap --with-abs-install-dir=/$(basedir)
+# S390x does not support dtrace probes
+# https://github.com/openjdk/jdk/pull/13228
+ifeq ($(DEB_HOST_ARCH),s390x)
+  CONFIGURE_ARGS += --enable-dtrace
 endif
 
 COMMON_CONFIGURE_ARGS =
@@ -733,9 +735,7 @@ ifeq ($(with_nss),yes)
     bd_nss = libnss3-dev (>= 2:3.17.1),
   endif
 endif
-ifeq ($(with_systemtap),yes)
-  bd_systemtap = systemtap-sdt-dev [!sh4],
-endif
+bd_systemtap = systemtap-sdt-dev [!sh4 !s390x],
 
 ifeq (,$(filter $(distrel),jessie stretch buster precise trusty xenial bionic focal groovy))
   with_debugedit = yes
@@ -772,7 +772,10 @@ endif
 dlopen_hl_depends =
 dlopen_hl_recommends =
 
-dlopen_hl_recommends += libcups2,
+ifeq (,$(filter $(distrel),squeeze wheezy jessie stretch buster bullseye bookworm lucid precise trusty xenial bionic focal jammy lunar mantic))
+  t64_suffix = t64
+endif
+dlopen_hl_recommends += libcups2$(t64_suffix),
 dlopen_hl_depends += liblcms2-2,
 
 ifeq ($(derivative),Ubuntu)
@@ -801,8 +804,8 @@ endif
 
 dlopen_jre_depends =
 dlopen_jre_recommends =
-dlopen_jre_depends += libglib2.0-0,
-dlopen_jre_depends += libgtk-3-0,
+dlopen_jre_depends += libglib2.0-0$(t64_suffix),
+dlopen_jre_depends += libgtk-3-0$(t64_suffix),
 dlopen_jre_depends += libxrandr2, libxinerama1,
 ifneq (,$(filter $(distrel),squeeze wheezy jessie stretch lucid precise xenial))
   dlopen_jre_depends += libgl1-mesa-glx | libgl1,
@@ -813,7 +816,7 @@ ifeq ($(with_system_hb),yes)
   dlopen_jre_depends += libharfbuzz0b,
 endif
 ifeq (,$(findstring libcups, $(dlopen_hl_depends)))
-  dlopen_jre_depends += libcups2,
+  dlopen_jre_depends += libcups2$(t64_suffix),
 endif
 ifeq (,$(findstring libfontconfig, $(dlopen_hl_depends)))
   dlopen_jre_depends += libfontconfig1,
@@ -1871,11 +1874,6 @@ endif
 	mkdir -p $(d_jrehl)/usr/lib/debug/usr/lib/jvm/$(jdirname)
 	ln -sf $(jdirname) $(d_jrehl)/usr/lib/debug/usr/lib/jvm/$(jdiralias)
 
-ifeq ($(with_systemtap),yes FIXME)
-	: # systemtap support
-	mkdir -p $(d_jrehl)/usr/share/systemtap/tapset
-	cp -p build/tapset/hotspot.stp $(d_jrehl)/usr/share/systemtap/tapset/
-endif
 
 	: # install lintian overrides
 	for FILE in debian/*.overrides; do \
@@ -1900,7 +1898,7 @@ ifeq ($(with_docs),yes)
 	  cp -a $$i $(d_doc)/usr/share/doc/$(p_jrehl)/; \
 	  ln -sf ../$(p_jrehl)/$$b $(d_doc)/usr/share/doc/$(p_doc)/$$b; \
 	done
-	rm -v $(d_doc)/usr/share/doc/$(p_jrehl)/api/script-dir/jquery-3.6.1.min.js
+	rm -v $(d_doc)/usr/share/doc/$(p_jrehl)/api/script-dir/{jquery-3.7.1.min.js,jquery-ui.min.css,jquery-ui.min.js}
 	dh_link -p$(p_doc) \
 	  /usr/share/javascript/jquery/jquery.min.js \
 	    /usr/share/doc/$(p_jrehl)/api/script-dir/jquery-3.6.1.min.js
@@ -1999,7 +1997,7 @@ endif
 	dh_builddeb -a $(nodemo) $(nojrez) #$(bd_options)
 
 git_project		= jdk21u
-git_tag			= jdk-21.0.4+7
+git_tag			= jdk-21.0.5+11
 package_version		= $(shell echo $(PKGVERSION) | sed 's/-[^-][^-]*$$//')
 ifneq ($(is_upstream_release),yes)
   package_version	:= $(subst +,~,$(package_version))

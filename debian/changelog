@@ -1,8 +1,54 @@
-openjdk-21 (21.0.4+7-2deepin1) unstable; urgency=medium
+openjdk-21 (21.0.5+11-1) unstable; urgency=high
 
-  * Remove t64.
+  * OpenJDK 21.0.5 release, build 8.
+    - CVE-2024-21208
+    - CVE-2024-21210
+    - CVE-2024-21217
+    - CVE-2024-21235
 
- -- xiangzelong <xiangzelong@deepin.org>  Thu, 01 Aug 2024 19:37:59 +0800
+  [ Vladimir Petko ]
+  * d/rules: do not include dtrace support for S390x (JDK-8305174).
+  * d/t/problems.csv: Disable jdk/sun/security/util/Debug/DebugOptions.java
+    due to JDK-8339713.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 16 Oct 2024 10:41:47 +0200
+
+openjdk-21 (21.0.5~8ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.5 early access, build 8.
+  * Refresh patches.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sun, 22 Sep 2024 14:49:33 +0200
+
+openjdk-21 (21.0.5~6ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.5 early access, build 6.
+
+  [ Vladimir Petko ]
+  * d/p/reproducible-properties-timestamp.diff: Use PrivilegedAction
+    to avoid SecurityManager exception.
+  * Enable dtrace support.
+
+ -- Matthias Klose <doko@ubuntu.com>  Mon, 09 Sep 2024 15:29:08 +0200
+
+openjdk-21 (21.0.4+7-3) unstable; urgency=medium
+
+  [ Vladimir Petko ]
+  * d/copyright-generator/strip-common-licenses.sh: Add GPLv3 to the
+    list of common licenses.
+  * d/p/jdk-8334895-proposed.patch: Fix typo in the patch description.
+  * d/JB-*.overrides.in: Update lintian overrides.
+  * d/s/lintian-override: Add source-contains-prebuilt-javascript-object
+    due to LP: 2032992.
+  * d/control.in: Remove duplicate Provides.
+  * d/control: Regenerate.
+  * d/t/problemlist.csv: Update problemlist.csv for July release
+  * d/t/jtreg-autopkgtest.{in,sh}: Increase jtreg test timeouts.
+
+  [ Emmanuel Bourg ]
+  * Restore and update the reproducible-properties-timestamp patch.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 10 Aug 2024 10:08:49 +0200
 
 openjdk-21 (21.0.4+7-2) unstable; urgency=medium
 
