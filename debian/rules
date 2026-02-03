@@ -277,8 +277,8 @@ else ifneq (,$(filter $(distrel),mantic noble))
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-13
   bd_gcc = g++-13 <!cross>,
 else
-  export CC = $(DEB_HOST_GNU_TYPE)-gcc-13
-  export CXX = $(DEB_HOST_GNU_TYPE)-g++-13
+  export CC = $(DEB_HOST_GNU_TYPE)-gcc-12
+  export CXX = $(DEB_HOST_GNU_TYPE)-g++-12
   bd_gcc = g++-13 <!cross>,
 endif
 

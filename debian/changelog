@@ -1,3 +1,9 @@
+openjdk-21 (21.0.4+7-2deepin2) unstable; urgency=medium
+
+  * Build using gcc-12.
+
+ -- lichenggang <lichenggang@deepin.org>  Tue, 03 Feb 2026 20:51:42 +0800
+
 openjdk-21 (21.0.4+7-2deepin1) unstable; urgency=medium
 
   * Remove t64.
